@@ -34,6 +34,7 @@
     border-color: crimson;
     border-style: solid;
     border-width: 3px;
+    position: relative;
 }
 
 .img_config{
@@ -50,10 +51,7 @@
 }
 
 .botao_pos{
-    margin: 0px;
-}
-
-.detalhes{
-    background-color: white;
-    height: 1000px;
+    position: relative;
+    top: -20px;
+    right: -10px;
 }

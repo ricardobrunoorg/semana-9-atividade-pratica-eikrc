@@ -43,20 +43,76 @@ const data = {
     return `R$${valor}`
   }
 
+  function base_produto(array, valor){
+    if (valor === false) {
+      var divProduto = document.createElement("div")
+      divProduto.setAttribute("id", array.nome)
+      divProduto.classList.add(`${array.id}`)
+      document.getElementById("product-list").appendChild(divProduto)
+
+      var divInterna = document.createElement("div")
+      divInterna.classList.add("product")
+      divProduto.appendChild(divInterna)
+    } else {
+      divProduto = document.getElementById(array.nome)
+      divInterna = divProduto.querySelector("div")
+    }
+
+    const img = document.createElement("img")
+    img.classList.add("img_config")
+    img.src = array.imagem
+    divInterna.appendChild(img)
+
+    const pNome = document.createElement("p")
+    pNome.classList.add("font_config")
+    pNome.innerText = array.nome
+    divInterna.appendChild(pNome)
+
+    const pPreco = document.createElement("p")
+    pPreco.classList.add("font_config")
+    pPreco.innerText = price(array.preco)
+    divInterna.appendChild(pPreco)
+    return {divProduto, divInterna}
+  }
+
   function createProduct(array) {
-    const divProduto = document.createElement("div")
-    divProduto.setAttribute("id", array.nome)
-    document.getElementById("product-list").appendChild(divProduto)
-    divProduto.classList.add(`${array.id}`)
-    divProduto.innerHTML = `<div class="product"> <img class="img_config" src="${array.imagem}" alt=""> <p class="font_config">${array.nome} <p class="font_config">${price(array.preco)} <button class="font_config botao_pos">Ver Detalhes`
+    const {divProduto, divInterna} = base_produto(array, false)
+    
+    const btn = document.createElement("button")
+    btn.classList.add("font_config", "botao_pos")
+    btn.id = "detalhes"
+    btn.innerText = "Ver Detalhes"
+    divProduto.appendChild(btn)
+
+    var valor_input = false
+
+    btn.addEventListener('click', function(){
+      if (valor_input === false) {
+        valor_input = true
+        showProductDetails(divInterna, array)
+      }else {
+        valor_input = false
+        divInterna.innerHTML = ""
+        base_produto(array, true)
+      }
+    })
     return divProduto
+  }
+
+  function showProductDetails(produto, array) {
+    produto.innerHTML = `<p class="font_config">ID: ${array.id}
+        <p class="font_config">Nome: ${array.nome}
+        <p class="font_config">Preço": ${array.preco}
+        <p class="font_config">categoria: ${array.categoria}
+        <p class="font_config">Descricao": ${array.descricao}
+        <p class="font_config">Em estoque: ${array.emEstoque}`
   }
 
   function renderProducts(table) {
     dsp_prod.innerHTML = ""
     table.produtos.forEach(v => {
         if (dsp_prod.querySelector(`${v.nome}`) === null){
-          createProduct(v)
+          return createProduct(v)
         }
       });
   }
